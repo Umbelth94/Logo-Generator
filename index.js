@@ -10,6 +10,16 @@ const Square = require('./lib/square')
 
 function init() {
 
+    function writeToFile(fileName, data){
+        fs.writeFile(fileName, data, (err) => {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log('Successfully wrote to file');
+            }
+        })
+    }
+
     const promptQuestions = [
     {
         type:'input',
@@ -53,7 +63,7 @@ inquirer
             shape = new Square(answers.acronym, answers.textColor, answers.shape, answers.shapeColor)
         }
         const svgData = shape.render();
-        // writeToFile(`${answers.shape}.svg`, svgData);
+        writeToFile(`${answers.shape}.svg`, svgData);
     })
 }
 
