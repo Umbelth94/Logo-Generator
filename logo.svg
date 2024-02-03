@@ -1,0 +1,4 @@
+<svg width="300" height="200px">
+        <polygon points="100,0 0,200 200,200 fill= "red "/>
+        <text x="100" y="125" fill="blue" font-size="3rem" dominant-baseline="middle" text-anchor="middle">FLO</text>
+        </svg>
