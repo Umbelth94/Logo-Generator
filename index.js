@@ -1,6 +1,5 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-const Shape = require('./lib/shapes')
 const Triangle = require('./lib/triangle')
 const Circle = require('./lib/circle')
 const Square = require('./lib/square')
@@ -63,7 +62,7 @@ inquirer
             shape = new Square(answers.acronym, answers.textColor, answers.shape, answers.shapeColor)
         }
         const svgData = shape.render();
-        writeToFile(`${answers.shape}.svg`, svgData);
+        writeToFile(`logo.svg`, svgData);
     })
 }
 
