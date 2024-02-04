@@ -1,60 +1,111 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
-const Shape = require('./lib/shapes')
 const Triangle = require('./lib/triangle')
 const Circle = require('./lib/circle')
 const Square = require('./lib/square')
+const colorNames = require('./lib/colorNames')
 //Just a test to make sure the file exists
 // const newShape = new Shape('circle').render();
 
 
 function init() {
 
-    const promptQuestions = [
-    {
-        type:'input',
-        name:'acronym',
-        message:'Enter up to 3 characters for your logo text',
-    },
-    {
-        type:'input',
-        name:'textColor',
-        message:'Enter a color OR a hexidecimal number for your text color'
-    },
-    {
-        type:'list',
-        name:'shape',
-        message:'Choose a shape',
-        choices:['circle','triangle','square']
-    },
-    {
-        type:'input',
-        name:'shapeColor',
-        message:'Enter a color OR a hexidecimal number for your shape color'
-    }]
- 
+    function writeToFile(fileName, data){
+        fs.writeFile(fileName, data, (err) => {
+            if (err) {
+                return console.log(err);
+            } else {
+                console.log('Generated `logo.svg` sucessfully!');
+            }
+        })
+    }
 
-inquirer
-    .prompt(promptQuestions)
-    .then((answers) => {
-        if (answers instanceof Error) {
-            console.error(answers.message);
-            return;
+
+    const validateColorInput = (input) => {
+        const testRegex = /^#?([a-f0-9]{6}|[a-f0-9]{3})$/;
+    
+        let convertedInput = input.toLowerCase();
+        let convertedColor;
+    
+        if (colorNames[convertedInput]) {
+            // If the input is a valid color name, convert it to the corresponding hex value
+            convertedColor = colorNames[convertedInput];
         }
+    
+        if (!convertedColor && !testRegex.test(input)) {
+            return 'Please enter a valid color name or a hexcode';
+        }
+    
+        return true;
+    };
 
+    const validateAcronymInput = (input) => {
+        if (!input) {
+            return 'Please enter an acronym no longer than 3 characters'
+        } else if (input.length > 3) {
+            return 'Acronym cannot be longer than 3 characters'
+        } 
+        return true;
+    }
+
+    //Declare an async function to prompt the user for answers
+    const promptForAnswers = async () => {
+        const promptQuestions = [
+            {
+                type: 'input',
+                name: 'acronym',
+                message: 'Enter up to 3 characters for your logo text',
+                validate: validateAcronymInput,
+            },
+            {
+                type: 'input',
+                name: 'textColor',
+                message: 'Enter a color OR a hexadecimal number (with the #) for your text color',
+                validate: validateColorInput,
+            },
+            {
+                type: 'list',
+                name: 'shape',
+                message: 'Choose a shape',
+                choices: ['circle', 'triangle', 'square'],
+            },
+            {
+                type: 'input',
+                name: 'shapeColor',
+                message: 'Enter a color OR a hexadecimal number (with the #) for your shape color',
+                validate: validateColorInput,
+            },
+        ];
+
+        return inquirer.prompt(promptQuestions);
+    };
+
+    const execute = async () => {
+        const promptAnswers = await promptForAnswers();
+
+        // Access answers based on question names
+        const acronym = promptAnswers.acronym.trim();
+        const textColor = promptAnswers.textColor.trim();
+        const shapeColor = promptAnswers.shapeColor.trim();
+        const shapeChoice = promptAnswers.shape;
         let shape;
 
-        console.log(answers);
-        if (answers.shape === 'triangle') {
-            shape = new Triangle(answers.acronym, answers.textColor, answers.shape, answers.shapeColor)
-        } else if (answers.shape === 'circle') {
-            shape = new Circle(answers.acronym, answers.textColor, answers.shape, answers.shapeColor)
-        } else if (answers.shape ==='square') {
-            shape = new Square(answers.acronym, answers.textColor, answers.shape, answers.shapeColor)
+        if (promptAnswers.shape === 'circle') {
+            shape = new Circle(acronym, textColor, shapeChoice, shapeColor);
+        } else if (promptAnswers.shape === 'triangle') {
+            shape = new Triangle(acronym, textColor, shapeChoice, shapeColor);
+        } else if (promptAnswers.shape === 'square') {
+            shape = new Square(acronym, textColor, shapeChoice, shapeColor);
         }
+
+        console.log(shape);
         const svgData = shape.render();
-        // writeToFile(`${answers.shape}.svg`, svgData);
-    })
+
+        writeToFile(`logo.svg`, svgData);
+    };
+
+    execute();
 }
 
 init();
+
