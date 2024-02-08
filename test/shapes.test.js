@@ -3,16 +3,16 @@ const Shapes = require('../lib/shapes')
 //Test that the properties are being set in the correct case (lowercase)
 describe('Color validation of textColor and shapeColor', () => {
 
-    describe('When textColor is entered lowercase', () => {
-      it('should be set to red hexcode', () => {
+    describe('When textColor is entered lowercase red', () => {
+      it('should be set to  hexcode', () => {
         const textColor = 'red';
         const testShape = new Shapes('TNT', textColor, 'purple');
         expect(testShape.textColor).toEqual('#FF0000');
       });
     });
   
-      describe('When textColor is entered uppercase', () => {
-      it('should be set to red hexcode', () => {
+      describe('When textColor is entered uppercase red', () => {
+      it('should be set to  hexcode', () => {
         const textColor = 'Red';
         const testShape = new Shapes('TNT', textColor, 'purple');
         expect(testShape.textColor).toEqual('#FF0000');
@@ -20,7 +20,7 @@ describe('Color validation of textColor and shapeColor', () => {
     });
   });
 
-    describe('When shapeColor is entered lowercase', () => {
+    describe('When shapeColor is entered lowercase purple', () => {
     it('should be set to purple hexcode', () => {
       const shapeColor = 'purple';
       const testShape = new Shapes('TNT', 'purple', shapeColor);
@@ -28,7 +28,7 @@ describe('Color validation of textColor and shapeColor', () => {
     });
   });
 
-    describe('When shapeColor is entered uppercase', () => {
+    describe('When shapeColor is entered uppercase purple', () => {
     it('should be set to purple hexcode', () => {
       const shapeColor = 'Purple';
       const testShape = new Shapes('TNT', 'purple', shapeColor);
